@@ -8,9 +8,9 @@ const logger = createLogger('uploadTodoUrl');
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const journalItemId = event.pathParameters.journalItemId
-    const updatedTodo: UpdateJournalItemRequest = JSON.parse(event.body)
+    const updatedJournalItem: UpdateJournalItemRequest = JSON.parse(event.body)
 
-    await UpdateJournalItem(journalItemId, updatedTodo)
+    await UpdateJournalItem(journalItemId, updatedJournalItem)
     logger.info(`updating todo item with id ${journalItemId}`)
 
     return {

@@ -28,17 +28,17 @@ export async function createJournalItem(
 }
 
 export async function deleteTodo(journalItemId: string): Promise<void> {
-    const todo = await journalAccess.getTodo(journalItemId);
+    const todo = await journalAccess.getJournalItem(journalItemId);
     await journalAccess.deleteTodo(todo.userId, todo.createdAt);
 }
 
 export async function UpdateJournalItem(journalItemId: string, UpdateJournalItemRequest: UpdateJournalItemRequest): Promise<void> {
-    const todo = await journalAccess.getTodo(journalItemId);
-    await journalAccess.UpdateJournalItem(todo.userId, todo.createdAt, UpdateJournalItemRequest);
+    const journalItem = await journalAccess.getJournalItem(journalItemId);
+    await journalAccess.UpdateJournalItem(journalItem.userId, journalItem.createdAt, UpdateJournalItemRequest);
 }
 
 export async function setAttachmentUrl(journalItemId: string,attachmentUrl: string,): Promise<void> {
-  const todo = await journalAccess.getTodo(journalItemId);
+  const todo = await journalAccess.getJournalItem(journalItemId);
 
   await journalAccess.setAttachmentUrl(todo.userId, todo.createdAt, attachmentUrl);
 }

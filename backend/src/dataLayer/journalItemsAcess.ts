@@ -33,7 +33,7 @@ export class JournalItemsAccess {
         return result.Items as JournalItem[];
     }
 
-    async getTodo(id: string): Promise<JournalItem>{
+    async getJournalItem(id: string): Promise<JournalItem>{
         const result = await this.docClient.query({
             TableName: this.journalItemsTable,
             IndexName: this.indexName,
@@ -57,22 +57,17 @@ export class JournalItemsAccess {
         }).promise()
     }
 
-    async UpdateJournalItem(userId:string, createdAt:string, updatedTodo:UpdateJournalItemRequest){
+    async UpdateJournalItem(userId:string, createdAt:string, updatedJournalItem:UpdateJournalItemRequest){
         await this.docClient.update({
             TableName: this.journalItemsTable,
             Key: {
                 'userId': userId,
                 'createdAt': createdAt,
             },
-            UpdateExpression: "set #content = :content, dueDate = :dueDate, done = :done",
+            UpdateExpression: "set content = :content",
             ExpressionAttributeValues: {
-                ":content": updatedTodo.content,
-                ":dueDate": updatedTodo.dueDate,
-                ":done": updatedTodo.done
+                ":content": updatedJournalItem.content,
             },
-            ExpressionAttributeNames: {
-                "#content": "content"
-            }
         }).promise()
     }
 

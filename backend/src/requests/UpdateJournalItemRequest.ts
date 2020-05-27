@@ -3,6 +3,4 @@
  */
 export interface UpdateJournalItemRequest {
   content: string
-  dueDate: string
-  done: boolean
 }
