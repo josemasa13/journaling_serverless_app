@@ -15,8 +15,6 @@ The application stores journaling items, and each journaling item contains the f
 * `content` (string) - The content written for the journal entry
 * `attachmentUrl` (string) (optional) - a URL pointing to an image attached to the journaling item
 
-You might also store an id of a user who created a TODO item.
-
 
 # Implemented functions
 
@@ -63,7 +61,7 @@ It receives a new journaling item in JSON format that looks like this:
 }
 ```
 
-It should return a new TODO item that looks like this:
+It should return a new journaling item that looks like this:
 
 ```json
 {
@@ -75,8 +73,9 @@ It should return a new TODO item that looks like this:
   }
 }
 ```
+The attachment URL is optional
 
-* `UpdateJournalItem` - updates a journal entry created by a current user. A shape of data send by a client application to this function can be found in the `UpdateJournalItemRequest.ts` file
+* `UpdateJournalItem` - updates a journal entry created by a current user. 
 
 It receives an object that contains one field that can be updated in the entry:
 
@@ -110,9 +109,9 @@ Authentication was created using your Auth0 application. To test the api it is n
 
 # How to run the application
 
-# Postman collection
+## Postman collection
 
-An alternative way to test your API, you can use the Postman collection that contains sample requests. You can find a Postman collection in this project. To import this collection, do the following.
+The easiest way to test the API is using Postman, you can use the Postman collection that contains sample requests. You can find a Postman collection in this project. To import this collection, do the following.
 
 Click on the import button:
 
@@ -129,10 +128,4 @@ Select a file to import:
 ![Alt text](images/import-collection-3.png?raw=true "Image 3")
 
 
-Right click on the imported collection to set variables for the collection:
-
-![Alt text](images/import-collection-4.png?raw=true "Image 4")
-
-Provide variables for the collection (similarly to how this was done in the course):
-
-![Alt text](images/import-collection-5.png?raw=true "Image 5")
+The variables (apiId and authToken are provided in the collection variables already, so there's no need to modify variables)
