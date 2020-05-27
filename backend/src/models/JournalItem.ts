@@ -1,8 +1,8 @@
-export interface TodoItem {
+export interface JournalItem {
   userId: string
   journalItemId: string
   createdAt: string
-  name: string
+  content: string
   dueDate: string
   done: boolean
   attachmentUrl?: string

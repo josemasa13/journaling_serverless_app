@@ -1,5 +1,5 @@
 export interface TodoUpdate {
-  name: string
+  content: string
   dueDate: string
   done: boolean
 }

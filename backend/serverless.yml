@@ -87,7 +87,7 @@ functions:
               summary: Create a new Journaling item
               description: Create a new Journaling item
               requestModels:
-                'application/json': CreateTodoRequest
+                'application/json': CreateJournalItemRequest
     iamRoleStatements:
       - Effect: Allow
         Action:

@@ -1,11 +1,10 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
 import 'source-map-support/register'
-import { UpdateJournalItem } from "../../Logic/todos";
+import { UpdateJournalItem } from "../../Logic/journalItems";
 import { UpdateJournalItemRequest } from '../../requests/UpdateJournalItemRequest'
 import { createLogger } from '../../utils/logger';
 
 const logger = createLogger('uploadTodoUrl');
-
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const journalItemId = event.pathParameters.journalItemId

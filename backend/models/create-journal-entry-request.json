@@ -3,7 +3,7 @@
     "title": "todo",
     "type": "object",
     "properties": {
-        "name": {
+        "content": {
             "type": "string"
         },
         "dueDate": {
@@ -11,7 +11,7 @@
         }
     },
     "required": [
-        "name",
+        "content",
         "dueDate"
     ],
     "additionalProperties": false

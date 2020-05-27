@@ -1,5 +1,5 @@
 import 'source-map-support/register'
-import { getAllTodos } from "../../Logic/todos";
+import { getAllJournalItems } from "../../Logic/journalItems";
 import { parseUserId } from '../../auth/utils';
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
 import { createLogger } from '../../utils/logger';
@@ -14,8 +14,8 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   const jwtToken = split[1]
   const userId = parseUserId(jwtToken)
 
-  const items = await getAllTodos(userId)
-  logger.info(`retrieving all todo items for user ${userId}`)
+  const items = await getAllJournalItems(userId)
+  logger.info(`retrieving all journal items for user ${userId}`)
 
   return {
     statusCode: 200,

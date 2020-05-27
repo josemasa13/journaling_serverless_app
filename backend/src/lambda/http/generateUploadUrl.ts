@@ -1,7 +1,7 @@
 import 'source-map-support/register'
 
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
-import { setAttachmentUrl } from "../../Logic/todos";
+import { setAttachmentUrl } from "../../Logic/journalItems";
 import { createLogger } from '../../utils/logger';
 import * as uuid from 'uuid'
 

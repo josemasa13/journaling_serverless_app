@@ -1,21 +1,21 @@
 import 'source-map-support/register'
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
-import { CreateJournalItem } from "../../Logic/todos";
+import { createJournalItem } from "../../Logic/journalItems";
 import { parseUserId } from '../../auth/utils';
-import { CreateTodoRequest } from '../../requests/CreateTodoRequest'
+import { CreateJournalItemRequest } from '../../requests/CreateJournalItemRequest'
 import { createLogger } from '../../utils/logger';
 
 const logger = createLogger('uploadTodoUrl');
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  const newTodo: CreateTodoRequest = JSON.parse(event.body)
+  const newTodo: CreateJournalItemRequest = JSON.parse(event.body)
   
   const authorization = event.headers.Authorization
   const split = authorization.split(' ')
   const jwtToken = split[1]
   const userId = parseUserId(jwtToken)
   
-  const item = await CreateJournalItem(newTodo, userId)
+  const item = await createJournalItem(newTodo, userId)
   logger.info(`creating todo item for user ${userId} with the following details ${item}`)
 
 
