@@ -36,7 +36,7 @@ provider:
     minimumCompressionSize: 1024
 
   environment:
-    JOURNAL_ITEMS_TABLE: Todos-${self:provider.stage}
+    JOURNAL_ITEMS_TABLE: JournalItems-${self:provider.stage}
     INDEX_NAME: ItemIndex
     IMAGES_S3_BUCKET: masa-serverless-journaling-images-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
@@ -110,7 +110,7 @@ functions:
     events:
       - http:
             method: patch
-            path: todos/{journalItemId}
+            path: journalitems/{journalItemId}
             cors: true
             authorizer: Auth
             reqValidatorName: RequestBodyValidator
@@ -140,7 +140,7 @@ functions:
     events:
       - http:
             method: post
-            path: todos/{journalItemId}/attachment
+            path: journalitems/{journalItemId}/attachment
             cors: true
             authorizer: Auth
     iamRoleStatements:

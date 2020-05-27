@@ -3,5 +3,4 @@
  */
 export interface CreateJournalItemRequest {
   content: string
-  dueDate: string
 }

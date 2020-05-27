@@ -23,9 +23,7 @@ export async function createJournalItem(
         journalItemId: itemId,
         userId: userId,
         content: createTodoRequest.content,
-        dueDate: createTodoRequest.dueDate,
-        createdAt: new Date().toISOString(),
-        done: false,
+        createdAt: new Date().toISOString()
   })
 }
 
