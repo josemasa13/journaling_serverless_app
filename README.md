@@ -128,4 +128,4 @@ Select a file to import:
 ![Alt text](images/import-collection-3.png?raw=true "Image 3")
 
 
-The variables (apiId and authToken are provided in the collection variables already, so there's no need to modify variables)
+The variables (apiId and authToken are provided in the collection variables already, so there's no need to modify those)
