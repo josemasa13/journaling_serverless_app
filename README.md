@@ -103,9 +103,7 @@ It returns a JSON object that looks like this:
 ## Authentication
 
 Authentication was created using your Auth0 application. To test the api it is necessary to have a token (provided by me at the moment). The authentication was implemented using asymmetrically encrypted JWT tokens.
-```
 
-```
 
 # How to run the application
 
