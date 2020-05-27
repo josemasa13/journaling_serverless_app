@@ -16,7 +16,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   const userId = parseUserId(jwtToken)
   
   const item = await createJournalItem(newTodo, userId)
-  logger.info(`creating todo item for user ${userId} with the following details ${item}`)
+  logger.info(`creating journaling item for user ${userId} with the following details ${item}`)
 
 
   return {

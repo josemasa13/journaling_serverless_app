@@ -12,18 +12,10 @@ custom:
         version: v1.0.0
         title: SimpleJournalingAPI
         description: Serverless application for creating and updating journaling items
-    models:
-      - name: CreateJournalEntryRequest
-        contentType: application/json
-        schema: ${file(models/create-journal-entry-request.json)}
-      - name: UpdateJournalEntryRequest
-        contentType: application/json
-        schema: ${file(models/update-journal-entry-request.json)}
 
 plugins:
   - serverless-webpack
   - serverless-iam-roles-per-function
-  - serverless-reqvalidator-plugin
 
 provider:
   tracing:
@@ -58,6 +50,7 @@ functions:
             path: journalitems
             cors: true
             authorizer: Auth
+
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -82,12 +75,11 @@ functions:
             path: journalitems
             authorizer: Auth
             cors: true
-            reqValidatorName: RequestBodyValidator
-            documentation:
-              summary: Create a new Journaling item
-              description: Create a new Journaling item
-              requestModels:
-                'application/json': CreateJournalItemRequest
+            request:
+              # Schema that will be used to validate incoming requests
+              schema:
+                application/json: ${file(models/create-journal-entry-request.json)}
+
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -113,12 +105,7 @@ functions:
             path: journalitems/{journalItemId}
             cors: true
             authorizer: Auth
-            reqValidatorName: RequestBodyValidator
-            documentation:
-              summary: Update Todo item
-              description: Update Todo item
-              requestModels:
-                'application/json': UpdateJournalItemRequest
+
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -177,26 +164,6 @@ resources:
         ResponseType: DEFAULT_4XX
         RestApiId:
           Ref: 'ApiGatewayRestApi'
-
-    GatewayResponseDefault5XX:
-      Type: 'AWS::ApiGateway::GatewayResponse'
-      Properties:
-        ResponseParameters:
-          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
-          gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-          gatewayresponse.header.Access-Control-Allow-Methods: "'GET,OPTIONS,POST'"
-        ResponseType: DEFAULT_5XX
-        RestApiId:
-          Ref: 'ApiGatewayRestApi'
-
-    RequestBodyValidator:
-      Type: AWS::ApiGateway::RequestValidator
-      Properties:
-        Name: 'request-body-validator'
-        RestApiId:
-          Ref: ApiGatewayRestApi
-        ValidateRequestBody: true
-        ValidateRequestParameters: false
 
     JournalItemsTable:
       Type: AWS::DynamoDB::Table

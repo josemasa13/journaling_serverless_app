@@ -38,7 +38,7 @@ export async function UpdateJournalItem(journalItemId: string, UpdateJournalItem
 }
 
 export async function setAttachmentUrl(journalItemId: string,attachmentUrl: string,): Promise<void> {
-  const todo = await journalAccess.getJournalItem(journalItemId);
+  const journalItem = await journalAccess.getJournalItem(journalItemId);
 
-  await journalAccess.setAttachmentUrl(todo.userId, todo.createdAt, attachmentUrl);
+  await journalAccess.setAttachmentUrl(journalItem.userId, journalItem.createdAt, attachmentUrl);
 }
