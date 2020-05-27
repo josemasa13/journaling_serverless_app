@@ -1,18 +1,18 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
 import 'source-map-support/register'
-import { updateTodo } from "../../Logic/todos";
-import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest'
+import { UpdateJournalItem } from "../../Logic/todos";
+import { UpdateJournalItemRequest } from '../../requests/UpdateJournalItemRequest'
 import { createLogger } from '../../utils/logger';
 
 const logger = createLogger('uploadTodoUrl');
 
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    const todoId = event.pathParameters.todoId
-    const updatedTodo: UpdateTodoRequest = JSON.parse(event.body)
+    const journalItemId = event.pathParameters.journalItemId
+    const updatedTodo: UpdateJournalItemRequest = JSON.parse(event.body)
 
-    await updateTodo(todoId, updatedTodo)
-    logger.info(`updating todo item with id ${todoId}`)
+    await UpdateJournalItem(journalItemId, updatedTodo)
+    logger.info(`updating todo item with id ${journalItemId}`)
 
     return {
         statusCode: 204,

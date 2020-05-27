@@ -1,7 +1,7 @@
 import * as AWS from 'aws-sdk';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { TodoItem } from "../models/TodoItem";
-import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
+import { UpdateJournalItemRequest } from '../requests/UpdateJournalItemRequest'
 
 const AWSXRay = require('aws-xray-sdk');
 const XAWS = AWSXRay.captureAWS(AWS);
@@ -9,11 +9,11 @@ const XAWS = AWSXRay.captureAWS(AWS);
 export class TodosAccess {
   constructor(
       private readonly docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient(),
-      private readonly todosTable = process.env.TODOS_TABLE,
+      private readonly todosTable = process.env.JOURNAL_ITEMS_TABLE,
       private readonly indexName = process.env.INDEX_NAME
   ) {}
 
-    async createTodo(todoItem: TodoItem): Promise<TodoItem> {
+    async CreateJournalItem(todoItem: TodoItem): Promise<TodoItem> {
         await this.docClient.put({
             TableName: this.todosTable,
             Item: todoItem
@@ -37,9 +37,9 @@ export class TodosAccess {
         const result = await this.docClient.query({
             TableName: this.todosTable,
             IndexName: this.indexName,
-            KeyConditionExpression: 'todoId = :todoId',
+            KeyConditionExpression: 'journalItemId = :journalItemId',
             ExpressionAttributeValues:{
-                ':todoId': id
+                ':journalItemId': id
             }
         }).promise()
 
@@ -57,7 +57,7 @@ export class TodosAccess {
         }).promise()
     }
 
-    async updateTodo(userId:string, createdAt:string, updatedTodo:UpdateTodoRequest){
+    async UpdateJournalItem(userId:string, createdAt:string, updatedTodo:UpdateJournalItemRequest){
         await this.docClient.update({
             TableName: this.todosTable,
             Key: {

@@ -7,10 +7,10 @@ import { createLogger } from '../../utils/logger';
 const logger = createLogger('uploadTodoUrl');
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    const todoId = event.pathParameters.todoId
+    const journalItemId = event.pathParameters.journalItemId
 
-    await deleteTodo(todoId)
-    logger.info(`deleting ${todoId} todo item`)
+    await deleteTodo(journalItemId)
+    logger.info(`deleting ${journalItemId} todo item`)
     
 
     return {

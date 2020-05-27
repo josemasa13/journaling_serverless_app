@@ -2,9 +2,9 @@ import { apiEndpoint } from '../config'
 import { Todo } from '../types/Todo';
 import { CreateTodoRequest } from '../types/CreateTodoRequest';
 import Axios from 'axios'
-import { UpdateTodoRequest } from '../types/UpdateTodoRequest';
+import { UpdateJournalItemRequest } from '../types/UpdateJournalItemRequest';
 
-export async function getTodos(idToken: string): Promise<Todo[]> {
+export async function GetJournalItems(idToken: string): Promise<Todo[]> {
   console.log('Fetching todos')
 
   const response = await Axios.get(`${apiEndpoint}/todos`, {
@@ -17,7 +17,7 @@ export async function getTodos(idToken: string): Promise<Todo[]> {
   return response.data.items
 }
 
-export async function createTodo(
+export async function CreateJournalItem(
   idToken: string,
   newTodo: CreateTodoRequest
 ): Promise<Todo> {
@@ -32,10 +32,10 @@ export async function createTodo(
 
 export async function patchTodo(
   idToken: string,
-  todoId: string,
-  updatedTodo: UpdateTodoRequest
+  journalItemId: string,
+  updatedTodo: UpdateJournalItemRequest
 ): Promise<void> {
-  await Axios.patch(`${apiEndpoint}/todos/${todoId}`, JSON.stringify(updatedTodo), {
+  await Axios.patch(`${apiEndpoint}/todos/${journalItemId}`, JSON.stringify(updatedTodo), {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
@@ -45,9 +45,9 @@ export async function patchTodo(
 
 export async function deleteTodo(
   idToken: string,
-  todoId: string
+  journalItemId: string
 ): Promise<void> {
-  await Axios.delete(`${apiEndpoint}/todos/${todoId}`, {
+  await Axios.delete(`${apiEndpoint}/todos/${journalItemId}`, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
@@ -57,9 +57,9 @@ export async function deleteTodo(
 
 export async function getUploadUrl(
   idToken: string,
-  todoId: string
+  journalItemId: string
 ): Promise<string> {
-  const response = await Axios.post(`${apiEndpoint}/todos/${todoId}/attachment`, '', {
+  const response = await Axios.post(`${apiEndpoint}/todos/${journalItemId}/attachment`, '', {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`

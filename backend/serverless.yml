@@ -36,29 +36,26 @@ provider:
     minimumCompressionSize: 1024
 
   environment:
-    TODOS_TABLE: Todos-${self:provider.stage}
+    JOURNAL_ITEMS_TABLE: Todos-${self:provider.stage}
     INDEX_NAME: ItemIndex
-    IMAGES_S3_BUCKET: masa-serverless-todo-images-${self:provider.stage}
+    IMAGES_S3_BUCKET: masa-serverless-journaling-images-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
 
 
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
 
-
-
-
 functions:
   Auth:
     handler: src/lambda/auth/auth0Authorizer.handler
 
 
-  GetTodos:
-    handler: src/lambda/http/getTodos.handler
+  GetJournalItems:
+    handler: src/lambda/http/getJournalItems.handler
     events:
       - http:
             method: get
-            path: todos
+            path: journalitems
             cors: true
             authorizer: Auth
     iamRoleStatements:
@@ -66,7 +63,7 @@ functions:
         Action:
           - dynamodb:Query
           - dynamodb:GetItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.JOURNAL_ITEMS_TABLE}
       - Effect: "Allow"
         Action:
           - xray:PutTelemetryRecords
@@ -77,29 +74,29 @@ functions:
           - s3:GetObject
         Resource: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*
       
-  CreateTodo:
-    handler: src/lambda/http/createTodo.handler
+  CreateJournalItem:
+    handler: src/lambda/http/createJournalItem.handler
     events:
       - http:
             method: post
-            path: todos
+            path: journalitems
             authorizer: Auth
             cors: true
             reqValidatorName: RequestBodyValidator
             documentation:
-              summary: Create a new Todo item
-              description: Create a new Todo item
+              summary: Create a new Journaling item
+              description: Create a new Journaling item
               requestModels:
                 'application/json': CreateTodoRequest
     iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:PutItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.JOURNAL_ITEMS_TABLE}
       - Effect: Allow
         Action:
           - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.INDEX_NAME}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.JOURNAL_ITEMS_TABLE}/index/${self:provider.environment.INDEX_NAME}
       - Effect: "Allow"
         Action:
           - xray:PutTelemetryRecords
@@ -108,12 +105,12 @@ functions:
 
 
 
-  UpdateTodo:
-    handler: src/lambda/http/updateTodo.handler
+  UpdateJournalItem:
+    handler: src/lambda/http/updateJournalItem.handler
     events:
       - http:
             method: patch
-            path: todos/{todoId}
+            path: todos/{journalItemId}
             cors: true
             authorizer: Auth
             reqValidatorName: RequestBodyValidator
@@ -121,41 +118,17 @@ functions:
               summary: Update Todo item
               description: Update Todo item
               requestModels:
-                'application/json': UpdateTodoRequest
+                'application/json': UpdateJournalItemRequest
     iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:Query
           - dynamodb:UpdateItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.JOURNAL_ITEMS_TABLE}
       - Effect: Allow
         Action:
           - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.INDEX_NAME}
-      - Effect: "Allow"
-        Action:
-          - xray:PutTelemetryRecords
-          - xray:PutTraceSegments
-        Resource: "*"
-
-  DeleteTodo:
-    handler: src/lambda/http/deleteTodo.handler
-    events:
-      - http:
-            method: delete
-            path: todos/{todoId}
-            cors: true
-            authorizer: Auth
-    iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - dynamodb:Query
-          - dynamodb:DeleteItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
-      - Effect: Allow
-        Action:
-          - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.INDEX_NAME}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.JOURNAL_ITEMS_TABLE}/index/${self:provider.environment.INDEX_NAME}
       - Effect: "Allow"
         Action:
           - xray:PutTelemetryRecords
@@ -167,7 +140,7 @@ functions:
     events:
       - http:
             method: post
-            path: todos/{todoId}/attachment
+            path: todos/{journalItemId}/attachment
             cors: true
             authorizer: Auth
     iamRoleStatements:
@@ -175,7 +148,7 @@ functions:
           Action:
             - dynamodb:Query
             - dynamodb:UpdateItem
-          Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+          Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.JOURNAL_ITEMS_TABLE}
         - Effect: Allow
           Action:
             - s3:PutObject
@@ -184,7 +157,7 @@ functions:
         - Effect: Allow
           Action:
             - dynamodb:Query
-          Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.INDEX_NAME}
+          Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.JOURNAL_ITEMS_TABLE}/index/${self:provider.environment.INDEX_NAME}
         - Effect: "Allow"
           Action:
             - xray:PutTelemetryRecords
@@ -225,7 +198,7 @@ resources:
         ValidateRequestBody: true
         ValidateRequestParameters: false
 
-    TodosTable:
+    JournalItemsTable:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
@@ -233,7 +206,7 @@ resources:
             AttributeType: S
           - AttributeName: createdAt
             AttributeType: S
-          - AttributeName: todoId
+          - AttributeName: journalItemId
             AttributeType: S
         KeySchema:
           - AttributeName: userId
@@ -241,11 +214,11 @@ resources:
           - AttributeName: createdAt
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
-        TableName: ${self:provider.environment.TODOS_TABLE}
+        TableName: ${self:provider.environment.JOURNAL_ITEMS_TABLE}
         GlobalSecondaryIndexes:
           - IndexName: ${self:provider.environment.INDEX_NAME}
             KeySchema:
-              - AttributeName: todoId
+              - AttributeName: journalItemId
                 KeyType: HASH
             Projection:
               ProjectionType: ALL

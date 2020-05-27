@@ -14,7 +14,7 @@ import {
   Loader
 } from 'semantic-ui-react'
 
-import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
+import { CreateJournalItem, deleteTodo, GetJournalItems, patchTodo } from '../api/todos-api'
 import Auth from '../auth/Auth'
 import { Todo } from '../types/Todo'
 
@@ -40,14 +40,14 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
     this.setState({ newTodoName: event.target.value })
   }
 
-  onEditButtonClick = (todoId: string) => {
-    this.props.history.push(`/todos/${todoId}/edit`)
+  onEditButtonClick = (journalItemId: string) => {
+    this.props.history.push(`/todos/${journalItemId}/edit`)
   }
 
   onTodoCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
     try {
       const dueDate = this.calculateDueDate()
-      const newTodo = await createTodo(this.props.auth.getIdToken(), {
+      const newTodo = await CreateJournalItem(this.props.auth.getIdToken(), {
         name: this.state.newTodoName,
         dueDate
       })
@@ -60,11 +60,11 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
     }
   }
 
-  onTodoDelete = async (todoId: string) => {
+  onTodoDelete = async (journalItemId: string) => {
     try {
-      await deleteTodo(this.props.auth.getIdToken(), todoId)
+      await deleteTodo(this.props.auth.getIdToken(), journalItemId)
       this.setState({
-        todos: this.state.todos.filter(todo => todo.todoId != todoId)
+        todos: this.state.todos.filter(todo => todo.journalItemId != journalItemId)
       })
     } catch {
       alert('Todo deletion failed')
@@ -74,7 +74,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
   onTodoCheck = async (pos: number) => {
     try {
       const todo = this.state.todos[pos]
-      await patchTodo(this.props.auth.getIdToken(), todo.todoId, {
+      await patchTodo(this.props.auth.getIdToken(), todo.journalItemId, {
         name: todo.name,
         dueDate: todo.dueDate,
         done: !todo.done
@@ -91,7 +91,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
 
   async componentDidMount() {
     try {
-      const todos = await getTodos(this.props.auth.getIdToken())
+      const todos = await GetJournalItems(this.props.auth.getIdToken())
       this.setState({
         todos,
         loadingTodos: false
@@ -161,7 +161,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
       <Grid padded>
         {this.state.todos.map((todo, pos) => {
           return (
-            <Grid.Row key={todo.todoId}>
+            <Grid.Row key={todo.journalItemId}>
               <Grid.Column width={1} verticalAlign="middle">
                 <Checkbox
                   onChange={() => this.onTodoCheck(pos)}
@@ -178,7 +178,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
                 <Button
                   icon
                   color="blue"
-                  onClick={() => this.onEditButtonClick(todo.todoId)}
+                  onClick={() => this.onEditButtonClick(todo.journalItemId)}
                 >
                   <Icon name="pencil" />
                 </Button>
@@ -187,7 +187,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
                 <Button
                   icon
                   color="red"
-                  onClick={() => this.onTodoDelete(todo.todoId)}
+                  onClick={() => this.onTodoDelete(todo.journalItemId)}
                 >
                   <Icon name="delete" />
                 </Button>

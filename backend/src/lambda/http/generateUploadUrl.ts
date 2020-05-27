@@ -18,12 +18,12 @@ const urlExpiration = process.env.SIGNED_URL_EXPIRATION
 
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    const todoId = event.pathParameters.todoId
+    const journalItemId = event.pathParameters.journalItemId
     const attachmentId = uuid.v4()
     const url = getUploadUrl(attachmentId)
     const attachmentUrl = `https://${bucketName}.s3.amazonaws.com/${attachmentId}`
-    await setAttachmentUrl(todoId, attachmentUrl)
-    logger.info(`attaching url to the ${todoId} todo item`)
+    await setAttachmentUrl(journalItemId, attachmentUrl)
+    logger.info(`attaching url to the ${journalItemId} todo item`)
 
     return {
         statusCode: 200,

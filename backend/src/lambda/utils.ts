@@ -17,13 +17,13 @@ export function getUserId(event: APIGatewayProxyEvent): string {
 
 
 
-export async function getSingleTodo(docClient: AWS.DynamoDB.DocumentClient,todoId: string, tableName: string, indexName: string ){
+export async function getSingleTodo(docClient: AWS.DynamoDB.DocumentClient,journalItemId: string, tableName: string, indexName: string ){
   const item = await docClient.query({
       TableName: tableName,
       IndexName: indexName,
-      KeyConditionExpression: 'todoId = :todoId',
+      KeyConditionExpression: 'journalItemId = :journalItemId',
       ExpressionAttributeValues: {
-          ':todoId': todoId
+          ':journalItemId': journalItemId
       }
   }).promise()
 

@@ -10,7 +10,7 @@ This application will allow creating/removing/updating/fetching TODO items. Each
 
 The application should store TODO items, and each TODO item contains the following fields:
 
-* `todoId` (string) - a unique id for an item
+* `journalItemId` (string) - a unique id for an item
 * `createdAt` (string) - date and time when an item was created
 * `name` (string) - name of a TODO item (e.g. "Change a light bulb")
 * `dueDate` (string) - date and time by which an item should be completed
@@ -26,7 +26,7 @@ To implement this project, you need to implement the following functions and con
 
 * `Auth` - this function should implement a custom authorizer for API Gateway that should be added to all other functions.
 
-* `GetTodos` - should return all TODOs for a current user. A user id can be extracted from a JWT token that is sent by the frontend
+* `GetJournalItems` - should return all TODOs for a current user. A user id can be extracted from a JWT token that is sent by the frontend
 
 It should return data that looks like this:
 
@@ -34,7 +34,7 @@ It should return data that looks like this:
 {
   "items": [
     {
-      "todoId": "123",
+      "journalItemId": "123",
       "createdAt": "2019-07-27T20:01:45.424Z",
       "name": "Buy milk",
       "dueDate": "2019-07-29T20:01:45.424Z",
@@ -42,7 +42,7 @@ It should return data that looks like this:
       "attachmentUrl": "http://example.com/image.png"
     },
     {
-      "todoId": "456",
+      "journalItemId": "456",
       "createdAt": "2019-07-27T20:01:45.424Z",
       "name": "Send a letter",
       "dueDate": "2019-07-29T20:01:45.424Z",
@@ -53,7 +53,7 @@ It should return data that looks like this:
 }
 ```
 
-* `CreateTodo` - should create a new TODO for a current user. A shape of data send by a client application to this function can be found in the `CreateTodoRequest.ts` file
+* `CreateJournalItem` - should create a new TODO for a current user. A shape of data send by a client application to this function can be found in the `CreateTodoRequest.ts` file
 
 It receives a new TODO item to be created in JSON format that looks like this:
 
@@ -72,7 +72,7 @@ It should return a new TODO item that looks like this:
 ```json
 {
   "item": {
-    "todoId": "123",
+    "journalItemId": "123",
     "createdAt": "2019-07-27T20:01:45.424Z",
     "name": "Buy milk",
     "dueDate": "2019-07-29T20:01:45.424Z",
@@ -82,7 +82,7 @@ It should return a new TODO item that looks like this:
 }
 ```
 
-* `UpdateTodo` - should update a TODO item created by a current user. A shape of data send by a client application to this function can be found in the `UpdateTodoRequest.ts` file
+* `UpdateJournalItem` - should update a TODO item created by a current user. A shape of data send by a client application to this function can be found in the `UpdateJournalItemRequest.ts` file
 
 It receives an object that contains three fields that can be updated in a TODO item:
 
@@ -175,7 +175,7 @@ To store TODO items, you might want to use a DynamoDB table with local secondary
 
 ```yml
 
-TodosTable:
+JournalItemsTable:
   Type: AWS::DynamoDB::Table
   Properties:
     AttributeDefinitions:
@@ -191,7 +191,7 @@ TodosTable:
       - AttributeName: sortKey
         KeyType: RANGE
     BillingMode: PAY_PER_REQUEST
-    TableName: ${self:provider.environment.TODOS_TABLE}
+    TableName: ${self:provider.environment.JOURNAL_ITEMS_TABLE}
     LocalSecondaryIndexes:
       - IndexName: ${self:provider.environment.INDEX_NAME}
         KeySchema:

@@ -3,7 +3,7 @@ import * as uuid from 'uuid'
 import { TodoItem } from '../models/TodoItem'
 import { TodosAccess } from '../dataLayer/todosAccess'
 import { CreateTodoRequest } from '../requests/CreateTodoRequest'
-import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
+import { UpdateJournalItemRequest } from '../requests/UpdateJournalItemRequest'
 // import { parseUserId } from '../auth/utils'
 
 const todoAccess = new TodosAccess()
@@ -12,15 +12,15 @@ export async function getAllTodos(userId: string): Promise<TodoItem[]> {
   return todoAccess.getAllTodos(userId)
 }
 
-export async function createTodo(
+export async function CreateJournalItem(
     createTodoRequest: CreateTodoRequest,
     userId: string
 ): Promise<TodoItem> {
 
   const itemId = uuid.v4()
 
-  return await todoAccess.createTodo({
-        todoId: itemId,
+  return await todoAccess.CreateJournalItem({
+        journalItemId: itemId,
         userId: userId,
         name: createTodoRequest.name,
         dueDate: createTodoRequest.dueDate,
@@ -29,18 +29,18 @@ export async function createTodo(
   })
 }
 
-export async function deleteTodo(todoId: string): Promise<void> {
-    const todo = await todoAccess.getTodo(todoId);
+export async function deleteTodo(journalItemId: string): Promise<void> {
+    const todo = await todoAccess.getTodo(journalItemId);
     await todoAccess.deleteTodo(todo.userId, todo.createdAt);
 }
 
-export async function updateTodo(todoId: string, updateTodoRequest: UpdateTodoRequest): Promise<void> {
-    const todo = await todoAccess.getTodo(todoId);
-    await todoAccess.updateTodo(todo.userId, todo.createdAt, updateTodoRequest);
+export async function UpdateJournalItem(journalItemId: string, UpdateJournalItemRequest: UpdateJournalItemRequest): Promise<void> {
+    const todo = await todoAccess.getTodo(journalItemId);
+    await todoAccess.UpdateJournalItem(todo.userId, todo.createdAt, UpdateJournalItemRequest);
 }
 
-export async function setAttachmentUrl(todoId: string,attachmentUrl: string,): Promise<void> {
-  const todo = await todoAccess.getTodo(todoId);
+export async function setAttachmentUrl(journalItemId: string,attachmentUrl: string,): Promise<void> {
+  const todo = await todoAccess.getTodo(journalItemId);
 
   await todoAccess.setAttachmentUrl(todo.userId, todo.createdAt, attachmentUrl);
 }
