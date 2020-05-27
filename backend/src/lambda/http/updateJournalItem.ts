@@ -11,7 +11,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     const updatedJournalItem: UpdateJournalItemRequest = JSON.parse(event.body)
 
     await UpdateJournalItem(journalItemId, updatedJournalItem)
-    logger.info(`updating todo item with id ${journalItemId}`)
+    logger.info(`updating journaling item with id ${journalItemId}`)
 
     return {
         statusCode: 204,

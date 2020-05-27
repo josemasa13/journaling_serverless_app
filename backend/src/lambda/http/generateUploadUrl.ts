@@ -23,7 +23,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     const url = getUploadUrl(attachmentId)
     const attachmentUrl = `https://${bucketName}.s3.amazonaws.com/${attachmentId}`
     await setAttachmentUrl(journalItemId, attachmentUrl)
-    logger.info(`attaching url to the ${journalItemId} todo item`)
+    logger.info(`attaching url to the ${journalItemId} journaling item`)
 
     return {
         statusCode: 200,

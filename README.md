@@ -103,7 +103,9 @@ It returns a JSON object that looks like this:
 ## Authentication
 
 Authentication was created using your Auth0 application. To test the api it is necessary to have a token (provided by me at the moment). The authentication was implemented using asymmetrically encrypted JWT tokens.
+```
 
+```
 
 # How to run the application
 
@@ -126,4 +128,10 @@ Select a file to import:
 ![Alt text](images/import-collection-3.png?raw=true "Image 3")
 
 
-The variables (apiId and authToken are provided in the collection variables already, so there's no need to modify those)
+Right click on the imported collection to set variables for the collection:
+
+![Alt text](images/import-collection-4.png?raw=true "Image 4")
+
+Provide variables for the collection:
+
+![Alt text](images/import-collection-5.png?raw=true "Image 5")

@@ -26,12 +26,6 @@ export async function createJournalItem(
         createdAt: new Date().toISOString()
   })
 }
-
-export async function deleteTodo(journalItemId: string): Promise<void> {
-    const todo = await journalAccess.getJournalItem(journalItemId);
-    await journalAccess.deleteTodo(todo.userId, todo.createdAt);
-}
-
 export async function UpdateJournalItem(journalItemId: string, UpdateJournalItemRequest: UpdateJournalItemRequest): Promise<void> {
     const journalItem = await journalAccess.getJournalItem(journalItemId);
     await journalAccess.UpdateJournalItem(journalItem.userId, journalItem.createdAt, UpdateJournalItemRequest);

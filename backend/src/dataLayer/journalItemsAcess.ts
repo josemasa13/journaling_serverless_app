@@ -47,16 +47,6 @@ export class JournalItemsAccess {
         return item as JournalItem;
     }
 
-    async deleteTodo(userId: string, createdAt: string): Promise<void> {
-        await this.docClient.delete({
-            TableName: this.journalItemsTable,
-            Key: {
-                'userId': userId,
-                'createdAt': createdAt
-            }
-        }).promise()
-    }
-
     async UpdateJournalItem(userId:string, createdAt:string, updatedJournalItem:UpdateJournalItemRequest){
         await this.docClient.update({
             TableName: this.journalItemsTable,
