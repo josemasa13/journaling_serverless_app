@@ -1,34 +1,32 @@
-# Serverless TODO
+# Serverless Journaling app
 
-To implement this project, you need to implement a simple TODO application using AWS Lambda and Serverless framework. Search for all comments starting with the `TODO:` in the code to find the placeholders that you need to implement.
 
 # Functionality of the application
 
-This application will allow creating/removing/updating/fetching TODO items. Each TODO item can optionally have an attachment image. Each user only has access to TODO items that he/she has created.
+This application will allow creating/updating/fetching journaling items. Each journaling item can optionally have an attachment image. Each user only has access to his/her journaling items.
 
-# TODO items
+# Journaling items
 
-The application should store TODO items, and each TODO item contains the following fields:
+The application stores journaling items, and each journaling item contains the following fields:
 
 * `journalItemId` (string) - a unique id for an item
+* `userId` (string) - the user id of the journal entry creator
 * `createdAt` (string) - date and time when an item was created
-* `name` (string) - name of a TODO item (e.g. "Change a light bulb")
-* `dueDate` (string) - date and time by which an item should be completed
-* `done` (boolean) - true if an item was completed, false otherwise
-* `attachmentUrl` (string) (optional) - a URL pointing to an image attached to a TODO item
+* `content` (string) - The content written for the journal entry
+* `attachmentUrl` (string) (optional) - a URL pointing to an image attached to the journaling item
 
 You might also store an id of a user who created a TODO item.
 
 
-# Functions to be implemented
+# Implemented functions
 
-To implement this project, you need to implement the following functions and configure them in the `serverless.yml` file:
+The following functions were implemented and configured in the `serverless.yml` file:
 
 * `Auth` - this function should implement a custom authorizer for API Gateway that should be added to all other functions.
 
-* `GetJournalItems` - should return all TODOs for a current user. A user id can be extracted from a JWT token that is sent by the frontend
+* `GetJournalItems` - should return all journal entries for a current user
 
-It should return data that looks like this:
+It returns data that looks like this:
 
 ```json
 {
@@ -36,34 +34,32 @@ It should return data that looks like this:
     {
       "journalItemId": "123",
       "createdAt": "2019-07-27T20:01:45.424Z",
-      "name": "Buy milk",
-      "dueDate": "2019-07-29T20:01:45.424Z",
-      "done": false,
-      "attachmentUrl": "http://example.com/image.png"
+      "content": "This was an amazing day",
+      "attachmentUrl": "http://example.com/image.png",
+      "userId": "google-oauth2|111780691257890561140"
     },
     {
-      "journalItemId": "456",
-      "createdAt": "2019-07-27T20:01:45.424Z",
-      "name": "Send a letter",
-      "dueDate": "2019-07-29T20:01:45.424Z",
-      "done": true,
-      "attachmentUrl": "http://example.com/image.png"
-    },
+      "journalItemId": "123",
+      "createdAt": "2019-07-28T20:01:45.424Z",
+      "content": "Dear diary...",
+      "attachmentUrl": "http://example.com/image.png",
+      "userId": "google-oauth2|111780691257890561140"
+    }
   ]
 }
 ```
 
-* `CreateJournalItem` - should create a new TODO for a current user. A shape of data send by a client application to this function can be found in the `CreateTodoRequest.ts` file
+* `CreateJournalItem` - should create a new journal entry for the current user. 
 
-It receives a new TODO item to be created in JSON format that looks like this:
+It receives a new journaling item in JSON format that looks like this:
 
 ```json
 {
   "createdAt": "2019-07-27T20:01:45.424Z",
-  "name": "Buy milk",
-  "dueDate": "2019-07-29T20:01:45.424Z",
+  "content": "Dear diary...",
   "done": false,
-  "attachmentUrl": "http://example.com/image.png"
+  "attachmentUrl": "http://example.com/image.png",
+  "userId": "google-oauth2|111780691257890561140"
 }
 ```
 
@@ -74,37 +70,30 @@ It should return a new TODO item that looks like this:
   "item": {
     "journalItemId": "123",
     "createdAt": "2019-07-27T20:01:45.424Z",
-    "name": "Buy milk",
-    "dueDate": "2019-07-29T20:01:45.424Z",
-    "done": false,
+    "content": "Dear diary...",
     "attachmentUrl": "http://example.com/image.png"
   }
 }
 ```
 
-* `UpdateJournalItem` - should update a TODO item created by a current user. A shape of data send by a client application to this function can be found in the `UpdateJournalItemRequest.ts` file
+* `UpdateJournalItem` - updates a journal entry created by a current user. A shape of data send by a client application to this function can be found in the `UpdateJournalItemRequest.ts` file
 
-It receives an object that contains three fields that can be updated in a TODO item:
+It receives an object that contains one field that can be updated in the entry:
 
 ```json
 {
-  "name": "Buy bread",
-  "dueDate": "2019-07-29T20:01:45.424Z",
-  "done": true
+  "content": "Hello diary",
 }
 ```
 
-The id of an item that should be updated is passed as a URL parameter.
+The id of the entry that should be updated is passed as a URL parameter.
 
 It should return an empty body.
 
-* `DeleteTodo` - should delete a TODO item created by a current user. Expects an id of a TODO item to remove.
 
-It should return an empty body.
+* `GenerateUploadUrl` - returns a pre-signed URL that can be used to upload an attachment file for a journal entry.
 
-* `GenerateUploadUrl` - returns a pre-signed URL that can be used to upload an attachment file for a TODO item.
-
-It should return a JSON object that looks like this:
+It returns a JSON object that looks like this:
 
 ```json
 {
@@ -112,136 +101,14 @@ It should return a JSON object that looks like this:
 }
 ```
 
-All functions are already connected to appropriate events from API Gateway.
-
-An id of a user can be extracted from a JWT token passed by a client.
-
-You also need to add any necessary resources to the `resources` section of the `serverless.yml` file such as DynamoDB table and S3 bucket.
-
-
-# Frontend
-
-The `client` folder contains a web application that can use the API that should be developed in the project.
-
-This frontend should work with your serverless application once it is developed, you don't need to make any changes to the code. The only file that you need to edit is the `config.ts` file in the `client` folder. This file configures your client application just as it was done in the course and contains an API endpoint and Auth0 configuration:
-
-```ts
-const apiId = '...' API Gateway id
-export const apiEndpoint = `https://${apiId}.execute-api.us-east-1.amazonaws.com/dev`
-
-export const authConfig = {
-  domain: '...',    // Domain from Auth0
-  clientId: '...',  // Client id from an Auth0 application
-  callbackUrl: 'http://localhost:3000/callback'
-}
-```
-
 ## Authentication
 
-To implement authentication in your application, you would have to create an Auth0 application and copy "domain" and "client id" to the `config.ts` file in the `client` folder. We recommend using asymmetrically encrypted JWT tokens.
-
-# Best practices
-
-To complete this exercise, please follow the best practices from the 6th lesson of this course.
-
-## Logging
-
-The starter code comes with a configured [Winston](https://github.com/winstonjs/winston) logger that creates [JSON formatted](https://stackify.com/what-is-structured-logging-and-why-developers-need-it/) log statements. You can use it to write log messages like this:
-
-```ts
-import { createLogger } from '../../utils/logger'
-const logger = createLogger('auth')
-
-// You can provide additional information with every log statement
-// This information can then be used to search for log statements in a log storage system
-logger.info('User was authorized', {
-  // Additional information stored with a log statement
-  key: 'value'
-})
+Authentication was created using your Auth0 application. To test the api it is necessary to have a token (provided by me at the moment). The authentication was implemented using asymmetrically encrypted JWT tokens.
 ```
 
-
-# Grading the submission
-
-Once you have finished developing your application, please set `apiId` and Auth0 parameters in the `config.ts` file in the `client` folder. A reviewer would start the React development server to run the frontend that should be configured to interact with your serverless application.
-
-**IMPORTANT**
-
-*Please leave your application running until a submission is reviewed. If implemented correctly it will cost almost nothing when your application is idle.*
-
-# Suggestions
-
-To store TODO items, you might want to use a DynamoDB table with local secondary index(es). A create a local secondary index you need to create a DynamoDB resource like this:
-
-```yml
-
-JournalItemsTable:
-  Type: AWS::DynamoDB::Table
-  Properties:
-    AttributeDefinitions:
-      - AttributeName: partitionKey
-        AttributeType: S
-      - AttributeName: sortKey
-        AttributeType: S
-      - AttributeName: indexKey
-        AttributeType: S
-    KeySchema:
-      - AttributeName: partitionKey
-        KeyType: HASH
-      - AttributeName: sortKey
-        KeyType: RANGE
-    BillingMode: PAY_PER_REQUEST
-    TableName: ${self:provider.environment.JOURNAL_ITEMS_TABLE}
-    LocalSecondaryIndexes:
-      - IndexName: ${self:provider.environment.INDEX_NAME}
-        KeySchema:
-          - AttributeName: partitionKey
-            KeyType: HASH
-          - AttributeName: indexKey
-            KeyType: RANGE
-        Projection:
-          ProjectionType: ALL # What attributes will be copied to an index
-
-```
-
-To query an index you need to use the `query()` method like:
-
-```ts
-await this.dynamoDBClient
-  .query({
-    TableName: 'table-name',
-    IndexName: 'index-name',
-    KeyConditionExpression: 'paritionKey = :paritionKey',
-    ExpressionAttributeValues: {
-      ':paritionKey': partitionKeyValue
-    }
-  })
-  .promise()
 ```
 
 # How to run the application
-
-## Backend
-
-To deploy an application run the following commands:
-
-```
-cd backend
-npm install
-sls deploy -v
-```
-
-## Frontend
-
-To run a client application first edit the `client/src/config.ts` file to set correct parameters. And then run the following commands:
-
-```
-cd client
-npm install
-npm run start
-```
-
-This should start a development server with the React application that will interact with the serverless TODO application.
 
 # Postman collection
 
