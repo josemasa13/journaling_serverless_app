@@ -1,5 +1,5 @@
 service:
-  name: serverless-todo-app
+  name: simple-journaling-app
 
 custom:
   webpack:
@@ -10,15 +10,15 @@ custom:
     api:
       info:
         version: v1.0.0
-        title: ToDos API
-        description: Serverless application for creating and updating todo items
+        title: SimpleJournalingAPI
+        description: Serverless application for creating and updating journaling items
     models:
-      - name: CreateTodoRequest
+      - name: CreateJournalEntryRequest
         contentType: application/json
-        schema: ${file(models/create-todo-request.json)}
-      - name: UpdateTodoRequest
+        schema: ${file(models/create-journal-entry-request.json)}
+      - name: UpdateJournalEntryRequest
         contentType: application/json
-        schema: ${file(models/update-todo-request.json)}
+        schema: ${file(models/update-journal-entry-request.json)}
 
 plugins:
   - serverless-webpack
